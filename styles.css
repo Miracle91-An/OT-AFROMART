@@ -153,6 +153,10 @@ img { max-width: 100%; display: block; }
 .chat-head { background: #1db954; color: #fff; padding: .7rem .8rem; border-radius: 14px 14px 0 0; }
 .chat-body { padding: .8rem; }
 .chat-body a { color: var(--secondary); font-weight: 700; }
+.video-thumb {
+  background-size: cover;
+  background-position: center;
+}
 
 .page-hero { background: linear-gradient(120deg,#071a35,#123f7e); color:#fff; padding: 3rem 0; }
 .page-content { padding: 2.2rem 0 3rem; }
