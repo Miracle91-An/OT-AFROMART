@@ -1,3 +1,18 @@
+// ==================== VIDEO GALLERY - CUSTOMISE HERE ====================
+// Replace this array with your own video data. Add as many objects as you like.
+// Each object should have: title, tag, duration, thumb (URL to thumbnail image).
+const videosData = [
+  // Example entries - replace with your actual videos
+  { title: "Store Walkthrough 1", tag: "Store walkthrough", duration: "2:34", thumb: "https://yourdomain.com/thumb1.jpg" },
+  { title: "Cargo Shipment 1", tag: "Cargo shipment", duration: "1:48", thumb: "https://yourdomain.com/thumb2.jpg" },
+  { title: "Import/Export Logistics", tag: "Import/export logistics", duration: "3:12", thumb: "https://yourdomain.com/thumb3.jpg" },
+  // ... add up to 30 or more videos here
+];
+
+// If you haven't uploaded your videos yet, the script will generate placeholder cards.
+// To use your own, simply replace the videosData array with your entries.
+// =========================================================================
+
 const menuToggle = document.getElementById('menuToggle');
 const mobileNav = document.getElementById('mobileNav');
 if (menuToggle && mobileNav) {
@@ -30,23 +45,32 @@ if (slides.length && dotsWrap) {
 
 const videoTrack = document.getElementById('videoTrack');
 if (videoTrack) {
-  const videos = Array.from({ length: 30 }, (_, i) => ({
+  // Use videosData if it has entries, otherwise generate mock videos
+  let videos = videosData.length ? videosData : Array.from({ length: 30 }, (_, i) => ({
     title: `Operations Clip ${i + 1}`,
     tag: i % 3 === 0 ? 'Store walkthrough' : i % 3 === 1 ? 'Cargo shipment' : 'Import/export logistics',
-    duration: `${1 + (i % 5)}:${(10 + i * 7) % 60}`.padStart(4, '0')
+    duration: `${1 + (i % 5)}:${(10 + i * 7) % 60}`.padStart(4, '0'),
+    thumb: '' // empty for mock; will use gradient background
   }));
-  const renderCards = (arr) => arr.map((v) => `
-    <article class="video-card">
-      <div class="video-thumb">
-        <i class="fa-solid fa-play"></i>
-        <span class="duration">${v.duration}</span>
-      </div>
-      <div class="video-meta">
-        <h3>${v.title}</h3>
-        <p>${v.tag}</p>
-      </div>
-    </article>
-  `).join('');
+
+  const renderCards = (arr) => arr.map((v) => {
+    // If a thumbnail URL is provided, use it as background image
+    const thumbStyle = v.thumb ? `style="background-image: linear-gradient(120deg, rgba(0,0,0,.2), rgba(0,0,0,.4)), url('${v.thumb}'); background-size: cover;"` : '';
+    return `
+      <article class="video-card">
+        <div class="video-thumb" ${thumbStyle}>
+          <i class="fa-solid fa-play"></i>
+          <span class="duration">${v.duration}</span>
+        </div>
+        <div class="video-meta">
+          <h3>${v.title}</h3>
+          <p>${v.tag}</p>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // Duplicate the array to create an infinite scrolling effect (double the cards)
   videoTrack.innerHTML = renderCards(videos) + renderCards(videos);
 }
 
@@ -126,6 +150,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
 
+// ==================== ROTATING FOODSTUFF WITH TOUCH SWIPE ====================
 const foodstuffStage = document.getElementById('foodstuffStage');
 if (foodstuffStage) {
   const foodImages = [
@@ -136,15 +161,73 @@ if (foodstuffStage) {
     'https://images.unsplash.com/photo-1506617564039-2f3b650b7010?auto=format&fit=crop&w=1400&q=80'
   ];
   let foodIndex = 0;
+  let autoRotateInterval;
+
   const paintFood = () => {
     foodstuffStage.style.backgroundImage = `linear-gradient(120deg, rgba(0,0,0,.15), rgba(0,0,0,.35)), url('${foodImages[foodIndex]}')`;
   };
+
+  const startAutoRotate = () => {
+    if (autoRotateInterval) clearInterval(autoRotateInterval);
+    autoRotateInterval = setInterval(() => {
+      foodIndex = (foodIndex + 1) % foodImages.length;
+      paintFood();
+    }, 3200);
+  };
+
+  // Initial paint and start
   paintFood();
-  setInterval(() => {
-    foodIndex = (foodIndex + 1) % foodImages.length;
+  startAutoRotate();
+
+  // Touch swipe handling
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const minSwipeDistance = 50; // minimum pixels for a swipe
+
+  foodstuffStage.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  foodstuffStage.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+
+  // Optional: mouse swipe for desktop (if you want)
+  foodstuffStage.addEventListener('mousedown', (e) => {
+    touchStartX = e.screenX;
+  });
+  foodstuffStage.addEventListener('mouseup', (e) => {
+    touchEndX = e.screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const distance = touchEndX - touchStartX;
+    if (Math.abs(distance) < minSwipeDistance) return;
+
+    if (distance > 0) {
+      // Swipe right -> previous image
+      foodIndex = (foodIndex - 1 + foodImages.length) % foodImages.length;
+    } else {
+      // Swipe left -> next image
+      foodIndex = (foodIndex + 1) % foodImages.length;
+    }
     paintFood();
-  }, 3200);
+
+    // Reset auto-rotate timer after manual swipe
+    startAutoRotate();
+  }
+
+  // Prevent default touch behavior like scrolling when swiping on the element
+  foodstuffStage.addEventListener('touchmove', (e) => {
+    // Only prevent if it's a significant horizontal move to avoid interfering with vertical scroll
+    if (Math.abs(e.touches[0].screenX - touchStartX) > 20) {
+      e.preventDefault(); // prevent vertical scroll while swiping horizontally
+    }
+  }, { passive: false });
 }
+// =========================================================================
 
 if (whatsappFab) {
   let isDragging = false;
