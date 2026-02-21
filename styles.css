@@ -93,21 +93,42 @@ img { max-width: 100%; display: block; }
 }
 .video-gallery:hover .video-track { animation-play-state: paused; }
 .video-card {
-  width: 220px; flex: 0 0 auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,.09);
+  width: 260px;
+  flex: 0 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,.09);
   cursor: pointer;
   transition: transform 0.2s;
 }
-.video-card:hover { transform: scale(1.02); }
-.video-thumb {
-  height: 132px; background: linear-gradient(130deg,#12345e,#5f1024); position: relative;
-  background-size: cover;
-  background-position: center;
+.video-card:hover {
+  transform: scale(1.02);
 }
-.video-thumb i { position: absolute; inset: 0; margin: auto; width: 48px; height: 48px; border-radius: 50%; background: rgba(0,0,0,.4); color: #fff; display: grid; place-items: center; }
-.duration { position: absolute; right: 8px; bottom: 8px; color: #fff; background: rgba(0,0,0,.7); padding: .2rem .45rem; border-radius: 6px; font-size: .75rem; }
-.video-meta { padding: .7rem; }
-.video-meta h3 { font-size: .95rem; margin: 0 0 .3rem; }
-.video-meta p { margin: 0; color: var(--muted); font-size: .85rem; }
+.video-thumb {
+  width: 100%;
+  height: 146px; /* 16:9 aspect */
+  overflow: hidden;
+  background: #000;
+}
+.video-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none; /* ensures clicks go to card */
+}
+.video-meta {
+  padding: .7rem;
+}
+.video-meta h3 {
+  font-size: .95rem;
+  margin: 0 0 .3rem;
+}
+.video-meta p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .85rem;
+}
 @keyframes scrollGallery { from { transform: translateX(0);} to { transform: translateX(-50%);} }
 
 .product-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
