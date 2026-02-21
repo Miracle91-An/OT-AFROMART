@@ -6,14 +6,14 @@ const videosData = [
     title: "Store Walkthrough - Birmingham",
     tag: "Store tour",
     duration: "2:34",
-    thumb: "images/thumbs/store1.jpg",   // optional – if empty, a gradient will be used
+    thumb: "otvideos.mp4",   // optional – if empty, a gradient will be used
     videoUrl: "otvideo1.mp4"
   },
-  {
+
     title: "Cargo Loading for Export",
     tag: "Logistics",
     duration: "1:48",
-    thumb: "images/thumbs/cargo2.jpg",
+    thumb: "otvideo2.mp4",
     videoUrl: "videos/cargo2.mp4"
   },
   {
