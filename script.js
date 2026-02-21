@@ -1,18 +1,81 @@
-// ==================== VIDEO GALLERY - CUSTOMISE HERE ====================
-// Replace this array with your own video data. Add as many objects as you like.
-// Each object should have: title, tag, duration, thumb (URL to thumbnail image).
+// ==================== YOUR VIDEOS ====================
+// Upload your MP4 files to a 'videos' folder and thumbnails to 'images/thumbs' (optional).
+// Update this array with your real titles, tags, durations, thumb URLs, and video URLs.
 const videosData = [
-  // Example entries - replace with your actual videos
-  { title: "Store Walkthrough 1", tag: "Store walkthrough", duration: "2:34", thumb: "https://yourdomain.com/thumb1.jpg" },
-  { title: "Cargo Shipment 1", tag: "Cargo shipment", duration: "1:48", thumb: "https://yourdomain.com/thumb2.jpg" },
-  { title: "Import/Export Logistics", tag: "Import/export logistics", duration: "3:12", thumb: "https://yourdomain.com/thumb3.jpg" },
-  // ... add up to 30 or more videos here
+  {
+    title: "Store Walkthrough - Birmingham",
+    tag: "Store tour",
+    duration: "2:34",
+    thumb: "images/thumbs/store1.jpg",   // optional – if empty, a gradient will be used
+    videoUrl: "videos/store1.mp4"
+  },
+  {
+    title: "Cargo Loading for Export",
+    tag: "Logistics",
+    duration: "1:48",
+    thumb: "images/thumbs/cargo2.jpg",
+    videoUrl: "videos/cargo2.mp4"
+  },
+  {
+    title: "Fresh Produce Arrival",
+    tag: "Inventory",
+    duration: "3:12",
+    thumb: "images/thumbs/produce3.jpg",
+    videoUrl: "videos/produce3.mp4"
+  },
+  {
+    title: "Customer Pickup Experience",
+    tag: "Service",
+    duration: "2:05",
+    thumb: "images/thumbs/pickup4.jpg",
+    videoUrl: "videos/pickup4.mp4"
+  },
+  {
+    title: "Import Documentation Process",
+    tag: "Import/Export",
+    duration: "2:22",
+    thumb: "images/thumbs/docs5.jpg",
+    videoUrl: "videos/docs5.mp4"
+  }
+  // ... add up to 25+ videos here
 ];
 
-// If you haven't uploaded your videos yet, the script will generate placeholder cards.
-// To use your own, simply replace the videosData array with your entries.
-// =========================================================================
+// ==================== ANNOUNCEMENT POPUP SLIDES ====================
+// Define your rotating announcements here.
+// Each slide can have: title, description, image (optional), link (optional), buttonText.
+const announcementSlides = [
+  {
+    title: "🎬 New Store Walkthrough!",
+    description: "Take a tour of our Birmingham store – see the fresh produce section.",
+    image: "images/thumbs/store1.jpg",  // optional
+    link: "#operations",
+    buttonText: "Watch Now"
+  },
+  {
+    title: "📦 Cargo Operation Highlights",
+    description: "Watch how we load containers for export – real logistics in action.",
+    image: "images/thumbs/cargo2.jpg",
+    link: "#operations",
+    buttonText: "See Video"
+  },
+  {
+    title: "🥭 Fresh Mangoes Arrived",
+    description: "Juicy African mangoes now in stock. Order today!",
+    image: "images/thumbs/mangoes.jpg",
+    link: "#deals",
+    buttonText: "Shop Now"
+  },
+  {
+    title: "🎉 Import/Export Tips",
+    description: "Learn about our documentation support for businesses.",
+    image: null, // no image, just text
+    link: "import-export.html",
+    buttonText: "Learn More"
+  }
+  // Add as many as you like
+];
 
+// ========== MOBILE MENU ==========
 const menuToggle = document.getElementById('menuToggle');
 const mobileNav = document.getElementById('mobileNav');
 if (menuToggle && mobileNav) {
@@ -22,6 +85,7 @@ if (menuToggle && mobileNav) {
   });
 }
 
+// ========== HERO SLIDER ==========
 const slides = [...document.querySelectorAll('.slide')];
 const dotsWrap = document.getElementById('sliderDots');
 let slideIndex = 0;
@@ -43,6 +107,7 @@ if (slides.length && dotsWrap) {
   setInterval(() => setSlide((slideIndex + 1) % slides.length), 4500);
 }
 
+// ========== VIDEO GALLERY ==========
 const videoTrack = document.getElementById('videoTrack');
 if (videoTrack) {
   // Use videosData if it has entries, otherwise generate mock videos
@@ -50,14 +115,14 @@ if (videoTrack) {
     title: `Operations Clip ${i + 1}`,
     tag: i % 3 === 0 ? 'Store walkthrough' : i % 3 === 1 ? 'Cargo shipment' : 'Import/export logistics',
     duration: `${1 + (i % 5)}:${(10 + i * 7) % 60}`.padStart(4, '0'),
-    thumb: '' // empty for mock; will use gradient background
+    thumb: '', // empty for mock; will use gradient background
+    videoUrl: '' // mock videos have no URL
   }));
 
   const renderCards = (arr) => arr.map((v) => {
-    // If a thumbnail URL is provided, use it as background image
     const thumbStyle = v.thumb ? `style="background-image: linear-gradient(120deg, rgba(0,0,0,.2), rgba(0,0,0,.4)), url('${v.thumb}'); background-size: cover;"` : '';
     return `
-      <article class="video-card">
+      <article class="video-card" data-video-url="${v.videoUrl || ''}">
         <div class="video-thumb" ${thumbStyle}>
           <i class="fa-solid fa-play"></i>
           <span class="duration">${v.duration}</span>
@@ -74,6 +139,7 @@ if (videoTrack) {
   videoTrack.innerHTML = renderCards(videos) + renderCards(videos);
 }
 
+// ========== CART ==========
 const cart = JSON.parse(localStorage.getItem('otCart') || '[]');
 const cartButtons = document.querySelectorAll('[data-add-cart]');
 const cartDrawer = document.getElementById('cartDrawer');
@@ -129,6 +195,7 @@ document.addEventListener('click', (e) => {
 });
 drawCart();
 
+// ========== COOKIE BANNER ==========
 const cookieBanner = document.getElementById('cookieBanner');
 if (cookieBanner && !localStorage.getItem('otCookieAccepted')) cookieBanner.classList.add('show');
 const cookieAccept = document.getElementById('cookieAccept');
@@ -137,12 +204,14 @@ if (cookieAccept) cookieAccept.addEventListener('click', () => {
   cookieBanner?.classList.remove('show');
 });
 
+// ========== WHATSAPP CHAT ==========
 const whatsappFab = document.getElementById('whatsappFab');
 const chatWidget = document.getElementById('chatWidget');
 if (whatsappFab && chatWidget) {
   whatsappFab.addEventListener('click', () => chatWidget.classList.toggle('open'));
 }
 
+// ========== SCROLL ANIMATION ==========
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) entry.target.classList.add('show');
@@ -150,7 +219,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
 
-// ==================== ROTATING FOODSTUFF WITH TOUCH SWIPE ====================
+// ========== ROTATING FOODSTUFF WITH TOUCH SWIPE ==========
 const foodstuffStage = document.getElementById('foodstuffStage');
 if (foodstuffStage) {
   const foodImages = [
@@ -175,14 +244,12 @@ if (foodstuffStage) {
     }, 3200);
   };
 
-  // Initial paint and start
   paintFood();
   startAutoRotate();
 
-  // Touch swipe handling
   let touchStartX = 0;
   let touchEndX = 0;
-  const minSwipeDistance = 50; // minimum pixels for a swipe
+  const minSwipeDistance = 50;
 
   foodstuffStage.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
@@ -193,7 +260,6 @@ if (foodstuffStage) {
     handleSwipe();
   }, { passive: true });
 
-  // Optional: mouse swipe for desktop (if you want)
   foodstuffStage.addEventListener('mousedown', (e) => {
     touchStartX = e.screenX;
   });
@@ -207,28 +273,22 @@ if (foodstuffStage) {
     if (Math.abs(distance) < minSwipeDistance) return;
 
     if (distance > 0) {
-      // Swipe right -> previous image
       foodIndex = (foodIndex - 1 + foodImages.length) % foodImages.length;
     } else {
-      // Swipe left -> next image
       foodIndex = (foodIndex + 1) % foodImages.length;
     }
     paintFood();
-
-    // Reset auto-rotate timer after manual swipe
     startAutoRotate();
   }
 
-  // Prevent default touch behavior like scrolling when swiping on the element
   foodstuffStage.addEventListener('touchmove', (e) => {
-    // Only prevent if it's a significant horizontal move to avoid interfering with vertical scroll
     if (Math.abs(e.touches[0].screenX - touchStartX) > 20) {
-      e.preventDefault(); // prevent vertical scroll while swiping horizontally
+      e.preventDefault();
     }
   }, { passive: false });
 }
-// =========================================================================
 
+// ========== WHATSAPP DRAG ==========
 if (whatsappFab) {
   let isDragging = false;
   let moved = false;
@@ -262,3 +322,119 @@ if (whatsappFab) {
     if (moved) { e.preventDefault(); e.stopImmediatePropagation(); }
   }, true);
 }
+
+// ========== VIDEO MODAL ==========
+const videoModal = document.getElementById('videoModal');
+const modalVideo = document.getElementById('modalVideo');
+const closeModalBtn = document.querySelector('.video-modal-close');
+
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.video-card');
+  if (!card) return;
+  const videoUrl = card.dataset.videoUrl;
+  if (videoUrl) {
+    modalVideo.src = videoUrl;
+    videoModal.classList.add('show');
+    modalVideo.play();
+  }
+});
+
+const closeVideoModal = () => {
+  videoModal.classList.remove('show');
+  modalVideo.pause();
+  modalVideo.src = '';
+};
+if (closeModalBtn) closeModalBtn.addEventListener('click', closeVideoModal);
+window.addEventListener('click', (e) => {
+  if (e.target === videoModal) closeVideoModal();
+});
+
+// ========== ANNOUNCEMENT POPUP CAROUSEL ==========
+const announcementPopup = document.getElementById('announcementPopup');
+const closePopup = document.querySelector('.popup-close');
+const popupSlidesContainer = document.getElementById('popupSlides');
+const popupDotsContainer = document.getElementById('popupDots');
+
+let currentSlide = 0;
+let slideInterval;
+
+// Render slides and dots
+function renderAnnouncementSlides() {
+  if (!popupSlidesContainer) return;
+
+  popupSlidesContainer.innerHTML = '';
+  popupDotsContainer.innerHTML = '';
+
+  announcementSlides.forEach((slide, index) => {
+    const slideDiv = document.createElement('div');
+    slideDiv.className = `popup-slide ${index === 0 ? 'active' : ''}`;
+    
+    let html = '';
+    if (slide.image) {
+      html += `<img src="${slide.image}" alt="${slide.title}">`;
+    }
+    html += `<h3>${slide.title}</h3>`;
+    html += `<p>${slide.description}</p>`;
+    if (slide.link && slide.buttonText) {
+      html += `<a href="${slide.link}" class="btn btn-primary">${slide.buttonText}</a>`;
+    }
+    
+    slideDiv.innerHTML = html;
+    popupSlidesContainer.appendChild(slideDiv);
+
+    const dot = document.createElement('button');
+    dot.className = `popup-dot ${index === 0 ? 'active' : ''}`;
+    dot.setAttribute('data-slide', index);
+    dot.addEventListener('click', () => goToSlide(index));
+    popupDotsContainer.appendChild(dot);
+  });
+}
+
+function goToSlide(index) {
+  const slides = document.querySelectorAll('.popup-slide');
+  const dots = document.querySelectorAll('.popup-dot');
+  
+  if (!slides.length || !dots.length) return;
+  
+  slides[currentSlide].classList.remove('active');
+  dots[currentSlide].classList.remove('active');
+  
+  currentSlide = (index + slides.length) % slides.length;
+  
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+}
+
+function nextSlide() {
+  goToSlide(currentSlide + 1);
+}
+
+function startSlideInterval() {
+  if (slideInterval) clearInterval(slideInterval);
+  slideInterval = setInterval(nextSlide, 5000); // change every 5 seconds
+}
+
+if (announcementPopup) {
+  announcementPopup.addEventListener('mouseenter', () => {
+    clearInterval(slideInterval);
+  });
+  announcementPopup.addEventListener('mouseleave', () => {
+    startSlideInterval();
+  });
+}
+
+if (closePopup) {
+  closePopup.addEventListener('click', () => {
+    announcementPopup.classList.remove('show');
+    clearInterval(slideInterval);
+    localStorage.setItem('popupClosed', 'true');
+  });
+}
+
+setTimeout(() => {
+  if (!localStorage.getItem('popupClosed')) {
+    renderAnnouncementSlides();
+    announcementPopup.classList.add('show');
+    startSlideInterval();
+  }
+}, 3000);
