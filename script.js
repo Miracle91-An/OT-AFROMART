@@ -35,7 +35,7 @@ const announcementSlides = [
   {
     title: "🎬 New Store Walkthrough!",
     description: "Take a tour of our Birmingham store – see the fresh produce section.",
-    image: "storefront.jpg",
+    image: "storefront.jpeg",
     link: "#operations",
     buttonText: "Watch Now"
   },
