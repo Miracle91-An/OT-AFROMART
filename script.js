@@ -20,12 +20,12 @@ const videosData = [
   {
     title: "Customer Pickup Experience",
     tag: "Service",
-    videoUrl: "videos/pickup4.mp4"
+    videoUrl: "goodsexp.mp4"
   },
   {
     title: "Import Documentation Process",
     tag: "Import/Export",
-    videoUrl: "videos/docs5.mp4"
+    videoUrl: "export.mp4"
   }
   // Add up to 25+ videos here
 ];
@@ -42,21 +42,21 @@ const announcementSlides = [
   {
     title: "📦 OT AFROMART FLYER",
     description: "Call the numbers for your export – real logistics in action.",
-    image: "ota.jpg",
+    image: "ota.jpeg",
     link: "#operations",
     buttonText: "See Video"
   },
   {
-    title: "🥭 Fresh Mangoes Arrived",
-    description: "Juicy African mangoes now in stock. Order today!",
-    image: "images/thumbs/mangoes.jpg",
+    title: "🥭 Fresh Vegetables Arrived",
+    description: " Fresh vegetables now in stock. Order today!",
+    image: "veg.jpeg",
     link: "#deals",
     buttonText: "Shop Now"
   },
   {
     title: "🎉 Import/Export Tips",
     description: "Learn about our documentation support for businesses.",
-    image: null,
+    image: "goods.jpeg",
     link: "import-export.html",
     buttonText: "Learn More"
   }
