@@ -1,53 +1,41 @@
 // ==================== YOUR VIDEOS ====================
-// Upload your MP4 files to a 'videos' folder and thumbnails to 'images/thumbs' (optional).
-// Update this array with your real titles, tags, durations, thumb URLs, and video URLs.
+// Place your .mp4 files in the 'videos/' folder.
+// For each video, provide: title, tag, videoUrl.
 const videosData = [
   {
     title: "Store Walkthrough - Birmingham",
     tag: "Store tour",
-    duration: "2:34",
-    thumb: "otvideos.mp4",   // optional – if empty, a gradient will be used
-    videoUrl: "otvideo1.mp4"
+    videoUrl: "otvideos1.mp4"
   },
-
+  {
     title: "Cargo Loading for Export",
     tag: "Logistics",
-    duration: "1:48",
-    thumb: "otvideo2.mp4",
-    videoUrl: "videos/cargo2.mp4"
+    videoUrl: "otvideos2.mp4"
   },
   {
     title: "Fresh Produce Arrival",
     tag: "Inventory",
-    duration: "3:12",
-    thumb: "images/thumbs/produce3.jpg",
-    videoUrl: "otvideo2.mp4"
+    videoUrl: "otvideos2.mp4"
   },
   {
     title: "Customer Pickup Experience",
     tag: "Service",
-    duration: "2:05",
-    thumb: "images/thumbs/pickup4.jpg",
     videoUrl: "videos/pickup4.mp4"
   },
   {
     title: "Import Documentation Process",
     tag: "Import/Export",
-    duration: "2:22",
-    thumb: "images/thumbs/docs5.jpg",
     videoUrl: "videos/docs5.mp4"
   }
-  // ... add up to 25+ videos here
+  // Add up to 25+ videos here
 ];
 
 // ==================== ANNOUNCEMENT POPUP SLIDES ====================
-// Define your rotating announcements here.
-// Each slide can have: title, description, image (optional), link (optional), buttonText.
 const announcementSlides = [
   {
     title: "🎬 New Store Walkthrough!",
     description: "Take a tour of our Birmingham store – see the fresh produce section.",
-    image: "images/thumbs/store1.jpg",  // optional
+    image: "images/thumbs/store1.jpg",
     link: "#operations",
     buttonText: "Watch Now"
   },
@@ -68,11 +56,10 @@ const announcementSlides = [
   {
     title: "🎉 Import/Export Tips",
     description: "Learn about our documentation support for businesses.",
-    image: null, // no image, just text
+    image: null,
     link: "import-export.html",
     buttonText: "Learn More"
   }
-  // Add as many as you like
 ];
 
 // ========== MOBILE MENU ==========
@@ -107,25 +94,29 @@ if (slides.length && dotsWrap) {
   setInterval(() => setSlide((slideIndex + 1) % slides.length), 4500);
 }
 
-// ========== VIDEO GALLERY ==========
+// ========== VIDEO GALLERY (with live playing videos, no overlays) ==========
 const videoTrack = document.getElementById('videoTrack');
 if (videoTrack) {
-  // Use videosData if it has entries, otherwise generate mock videos
   let videos = videosData.length ? videosData : Array.from({ length: 30 }, (_, i) => ({
     title: `Operations Clip ${i + 1}`,
     tag: i % 3 === 0 ? 'Store walkthrough' : i % 3 === 1 ? 'Cargo shipment' : 'Import/export logistics',
-    duration: `${1 + (i % 5)}:${(10 + i * 7) % 60}`.padStart(4, '0'),
-    thumb: '', // empty for mock; will use gradient background
-    videoUrl: '' // mock videos have no URL
+    videoUrl: ''
   }));
 
   const renderCards = (arr) => arr.map((v) => {
-    const thumbStyle = v.thumb ? `style="background-image: linear-gradient(120deg, rgba(0,0,0,.2), rgba(0,0,0,.4)), url('${v.thumb}'); background-size: cover;"` : '';
+    let videoHtml = '';
+    if (v.videoUrl) {
+      videoHtml = `<video muted autoplay loop playsinline>
+        <source src="${v.videoUrl}" type="video/mp4">
+      </video>`;
+    } else {
+      // Fallback gradient background for mock videos
+      videoHtml = `<div style="width:100%; height:100%; background: linear-gradient(130deg,#12345e,#5f1024);"></div>`;
+    }
     return `
       <article class="video-card" data-video-url="${v.videoUrl || ''}">
-        <div class="video-thumb" ${thumbStyle}>
-          <i class="fa-solid fa-play"></i>
-          <span class="duration">${v.duration}</span>
+        <div class="video-thumb">
+          ${videoHtml}
         </div>
         <div class="video-meta">
           <h3>${v.title}</h3>
@@ -135,8 +126,13 @@ if (videoTrack) {
     `;
   }).join('');
 
-  // Duplicate the array to create an infinite scrolling effect (double the cards)
+  // Duplicate for infinite scroll
   videoTrack.innerHTML = renderCards(videos) + renderCards(videos);
+
+  // Attempt to play videos (autoplay may be blocked)
+  document.querySelectorAll('.video-card video').forEach(vid => {
+    vid.play().catch(() => {});
+  });
 }
 
 // ========== CART ==========
@@ -358,10 +354,8 @@ const popupDotsContainer = document.getElementById('popupDots');
 let currentSlide = 0;
 let slideInterval;
 
-// Render slides and dots
 function renderAnnouncementSlides() {
   if (!popupSlidesContainer) return;
-
   popupSlidesContainer.innerHTML = '';
   popupDotsContainer.innerHTML = '';
 
@@ -393,14 +387,10 @@ function renderAnnouncementSlides() {
 function goToSlide(index) {
   const slides = document.querySelectorAll('.popup-slide');
   const dots = document.querySelectorAll('.popup-dot');
-  
   if (!slides.length || !dots.length) return;
-  
   slides[currentSlide].classList.remove('active');
   dots[currentSlide].classList.remove('active');
-  
   currentSlide = (index + slides.length) % slides.length;
-  
   slides[currentSlide].classList.add('active');
   dots[currentSlide].classList.add('active');
 }
@@ -411,7 +401,7 @@ function nextSlide() {
 
 function startSlideInterval() {
   if (slideInterval) clearInterval(slideInterval);
-  slideInterval = setInterval(nextSlide, 5000); // change every 5 seconds
+  slideInterval = setInterval(nextSlide, 5000);
 }
 
 if (announcementPopup) {
