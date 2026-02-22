@@ -5,17 +5,17 @@ const videosData = [
   {
     title: "Store Walkthrough - Birmingham",
     tag: "Store tour",
-    videoUrl: "otvideo1.mp4"
+    videoUrl: "otvideo5.mp4"
   },
   {
     title: "Cargo Loading for Export",
     tag: "Logistics",
-    videoUrl: "otvideo2.mp4"
+    videoUrl: "otvideo6.mp4"
   },
   {
     title: "Fresh Produce Arrival",
     tag: "Inventory",
-    videoUrl: "otvideos.mp4"
+    videoUrl: "otvideo4.mp4"
   },
   {
     title: "Customer Pickup Experience",
