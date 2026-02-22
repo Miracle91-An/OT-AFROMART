@@ -345,7 +345,7 @@ window.addEventListener('click', (e) => {
   if (e.target === videoModal) closeVideoModal();
 });
 
-// ========== ANNOUNCEMENT POPUP CAROUSEL ==========
+// ========== ANNOUNCEMENT POPUP CAROUSEL – appears every time ==========
 const announcementPopup = document.getElementById('announcementPopup');
 const closePopup = document.querySelector('.popup-close');
 const popupSlidesContainer = document.getElementById('popupSlides');
@@ -417,14 +417,13 @@ if (closePopup) {
   closePopup.addEventListener('click', () => {
     announcementPopup.classList.remove('show');
     clearInterval(slideInterval);
-    localStorage.setItem('popupClosed', 'true');
+    // No localStorage set – popup will appear again on next page load
   });
 }
 
+// Show popup after 3 seconds on every page load
 setTimeout(() => {
-  if (!localStorage.getItem('popupClosed')) {
-    renderAnnouncementSlides();
-    announcementPopup.classList.add('show');
-    startSlideInterval();
-  }
+  renderAnnouncementSlides();
+  announcementPopup.classList.add('show');
+  startSlideInterval();
 }, 3000);
