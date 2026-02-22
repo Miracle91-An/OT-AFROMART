@@ -35,14 +35,14 @@ const announcementSlides = [
   {
     title: "🎬 New Store Walkthrough!",
     description: "Take a tour of our Birmingham store – see the fresh produce section.",
-    image: "images/thumbs/store1.jpg",
+    image: "storefront.jpg",
     link: "#operations",
     buttonText: "Watch Now"
   },
   {
-    title: "📦 Cargo Operation Highlights",
-    description: "Watch how we load containers for export – real logistics in action.",
-    image: "images/thumbs/cargo2.jpg",
+    title: "📦 OT AFROMART FLYER",
+    description: "Call the numbers for your export – real logistics in action.",
+    image: "ota.jpg",
     link: "#operations",
     buttonText: "See Video"
   },
