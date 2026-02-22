@@ -12,7 +12,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
   
-  <!-- Google Business Knowledge Panel Structured Data -->
+  <style>
+    .services-gallery { padding: 2rem 0; background: var(--surface); }
+    .gallery-container { position: relative; height: 400px; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); }
+    .gallery-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; }
+    .gallery-slide.active { opacity: 1; }
+    .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%); display: flex; align-items: center; padding: 2rem; }
+    .gallery-overlay h2 { color: #fff; font-size: 2.5rem; max-width: 600px; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); }
+    .gallery-dots { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 5; }
+    .gallery-dot { width: 12px; height: 12px; border-radius: 50%; border: none; background: rgba(255,255,255,0.5); cursor: pointer; }
+    .gallery-dot.active { background: var(--accent); transform: scale(1.2); }
+    .knowledge-panel-card { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: var(--shadow); margin-bottom: 2rem; }
+    .panel-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .panel-header i { font-size: 2rem; color: var(--primary); }
+    .panel-details .detail-item { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; }
+    .detail-item i { width: 24px; color: var(--secondary); }
+    .social-row a { margin: 0 0.3rem; font-size: 1.2rem; }
+    .panel-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+  </style>
+  
+  <!-- Google Business Knowledge Panel Structured Data (same as before) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -62,7 +81,6 @@
   </script>
 </head>
 <body>
-  <!-- Overlay for modals -->
   <div class="overlay" id="overlay"></div>
   
   <header class="site-header" id="top">
@@ -108,7 +126,16 @@
       </div>
     </section>
 
-    <!-- ========== VISIBLE KNOWLEDGE PANEL SECTION ========== -->
+    <!-- ========== ROTATING GALLERY ========== -->
+    <section class="services-gallery">
+      <div class="container">
+        <div class="gallery-container" id="contactGallery">
+          <div class="gallery-dots" id="galleryDots"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visible Knowledge Panel -->
     <section class="knowledge-panel-section">
       <div class="container">
         <div class="knowledge-panel-card">
@@ -137,7 +164,6 @@
               <i class="fa-solid fa-star"></i>
               <span><strong>Rating:</strong> 4.8 ★ (47 reviews)</span>
             </div>
-            <!-- Social Media Row (new) -->
             <div class="detail-item social-row">
               <i class="fa-solid fa-hashtag"></i>
               <span><strong>Follow us:</strong> 
@@ -170,7 +196,6 @@
           </form>
           <p><strong>Phone:</strong> +44 7716 370278</p>
           <p><a href="https://wa.me/447716370278" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp us</a></p>
-          <!-- Social icons in contact card (updated with TikTok) -->
           <p class="social-icons">
             <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
             <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -203,7 +228,7 @@
     </section>
   </main>
 
-  <!-- Footer (identical to index.html, with TikTok added) -->
+  <!-- Full Footer -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
@@ -269,7 +294,7 @@
     <a href="checkout.html" class="btn btn-secondary">Proceed to checkout</a>
   </aside>
 
-  <!-- Modals (login, register, forgot) -->
+  <!-- Modals -->
   <section class="modal" id="loginModal">
     <div class="modal-box">
       <h3>Login</h3>
@@ -325,6 +350,67 @@
       <a href="https://wa.me/447716370278" target="_blank" rel="noopener">Continue on WhatsApp</a>
     </div>
   </div>
+
+  <!-- Gallery JavaScript -->
+  <script>
+    const galleryImages = [
+      { url: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1600&q=80', caption: 'Our friendly team ready to help' },
+      { url: 'https://images.unsplash.com/photo-1578911373434-0cb395d2cbfb?auto=format&fit=crop&w=1600&q=80', caption: 'Visit our store in Walsall' },
+      { url: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=1600&q=80', caption: 'Fresh produce daily' },
+      { url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80', caption: 'Same-day delivery service' },
+      { url: 'https://images.unsplash.com/photo-1579113800032-c38bd7635818?auto=format&fit=crop&w=1600&q=80', caption: 'We ship worldwide' }
+    ];
+
+    const container = document.getElementById('contactGallery');
+    const dotsContainer = document.getElementById('galleryDots');
+    let currentIndex = 0;
+    let interval;
+
+    function createGallery() {
+      if (!container) return;
+      galleryImages.forEach((img, idx) => {
+        const slide = document.createElement('div');
+        slide.className = `gallery-slide ${idx === 0 ? 'active' : ''}`;
+        slide.style.backgroundImage = `linear-gradient(90deg, rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url('${img.url}')`;
+        const overlay = document.createElement('div');
+        overlay.className = 'gallery-overlay';
+        overlay.innerHTML = `<h2>${img.caption}</h2>`;
+        slide.appendChild(overlay);
+        container.appendChild(slide);
+      });
+      galleryImages.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.className = `gallery-dot ${idx === 0 ? 'active' : ''}`;
+        dot.addEventListener('click', () => goToSlide(idx));
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function goToSlide(index) {
+      const slides = document.querySelectorAll('.gallery-slide');
+      const dots = document.querySelectorAll('.gallery-dot');
+      if (!slides.length) return;
+      slides[currentIndex].classList.remove('active');
+      dots[currentIndex].classList.remove('active');
+      currentIndex = (index + slides.length) % slides.length;
+      slides[currentIndex].classList.add('active');
+      dots[currentIndex].classList.add('active');
+    }
+
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function startInterval() {
+      if (interval) clearInterval(interval);
+      interval = setInterval(nextSlide, 5000);
+    }
+
+    if (container) {
+      container.addEventListener('mouseenter', () => clearInterval(interval));
+      container.addEventListener('mouseleave', startInterval);
+    }
+
+    createGallery();
+    startInterval();
+  </script>
 
   <script src="script.js"></script>
 </body>
